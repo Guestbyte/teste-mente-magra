@@ -44,7 +44,7 @@
                 </v-col>
               </v-row>
 
-              <v-btn @click="submitForm" :disabled="isDisabled()" class="mt-4" color="primary">
+              <v-btn @click="submitForm" :disabled="isDisabled()" class="mt-4" color="green">
                 {{ form.loading ? 'Enviando...' : 'Enviar' }}
               </v-btn>
 
@@ -82,7 +82,6 @@
       vuetify: new Vuetify(),
       data() {
         return {
-          hover: false,
           form: {
             answers: Array(16).fill(0),
             scriptUrl: 'https://script.google.com/macros/s/AKfycbyc_-hf_DVv4DGwZeQqbCBvTJH6LpXysnhje_BaRbg4_dpVbysHhixMN6p8HMnudhev/exec',
@@ -143,90 +142,16 @@
               '55-64 años',
               '65+ años'
             ],
-            countrys: [
-              'España',
-              'Albania',
-              'Alemania',
-              'Andorra',
-              'Armenia',
-              'Austria',
-              'Azerbaiyán',
-              'Bélgica',
-              'Bielorrusia',
-              'Bolivia',
-              'Bosnia y Herzegovina',
-              'Brasil',
-              'Canadá',
-              'Chile',
-              'China',
-              'Chipre',
-              'Ciudad del Vaticano',
-              'Colombia',
-              'Corea del Sur',
-              'Croacia',
-              'Dinamarca',
-              'Ecuador',
-              'Eslovaquia',
-              'Eslovenia',
-              'Estonia',
-              'Estados Unidos',
-              'Finlandia',
-              'Francia',
-              'Georgia',
-              'Grecia',
-              'Hungría',
-              'India',
-              'Irlanda',
-              'Islandia',
-              'Italia',
-              'Japón',
-              'Kazajistán',
-              'Letonia',
-              'Liechtenstein',
-              'Lituania',
-              'Luxemburgo',
-              'Malasia',
-              'Malta',
-              'Moldavia',
-              'Mónaco',
-              'Montenegro',
-              'México',
-              'Noruega',
-              'Países Bajos',
-              'Paraguay',
-              'Perú',
-              'Polonia',
-              'Portugal',
-              'Reino Unido',
-              'República Checa',
-              'Rumanía',
-              'Rusia',
-              'San Marino',
-              'Serbia',
-              'Suecia',
-              'Suiza',
-              'Ucrania',
-              'Uruguay',
-              'Venezuela'
-            ],
             gender: '',
             industry: '',
             email: '',
             companysize: '',
-            sizes: [
-              '1-10 empleados',
-              '11-50 empleados',
-              '51-200 empleados',
-              '201-500 empleados',
-              '501-1000 empleados',
-              'Más de 1000 empleados',
-            ],
             genders: ['Masculino', 'Femenino'],
           },
-          rules: {
-            minChars: value => value.length >= 3 || 'Mínimo 3 caracteres',
-            isEmail: value => /.+@.+\..+/.test(value) || 'Insira um endereço de email válido',
-          }
+          // rules: {
+          //   minChars: value => value.length >= 3 || 'Mínimo 3 caracteres',
+          //   isEmail: value => /.+@.+\..+/.test(value) || 'Insira um endereço de email válido',
+          // }
         };
       },
       computed: {
@@ -235,26 +160,14 @@
           this.form.sessionName = sessionName;
           return (sessionName == 'null') ? false : sessionName;
         },
-        debugMode() {
-          return Boolean(new URLSearchParams(window.location.search).get('debug'));
-        },
       },
       methods: {
         isDisabled() {
-          return !this.form.valid || Boolean(this.form.answers.some((value) => value == 0))
+          return false
+          // return !this.form.valid || Boolean(this.form.answers.some((value) => value == 0))
         },
         onChange() {
           isDisabled() ? this.form.valid = false : this.form.valid = true
-        },
-        reverseAnswer(answer) {
-          const reversedValues = {
-            1: 5,
-            2: 4,
-            3: 3,
-            4: 2,
-            5: 1
-          };
-          return reversedValues[answer] || answer;
         },
         submitForm() {
           if (!this.form.valid) {
@@ -275,10 +188,6 @@
           let total = Number(0);
           this.form.answers.forEach((answer, index) => {
             index = index + 1;
-
-            let reversedScored = [3, 7, 11, 15].indexOf(index) !== -1;
-            if (reversedScored) answer = this.reverseAnswer(answer);
-
             formData.append(`answer${index}`, answer);
             total += Number(answer);
           });
