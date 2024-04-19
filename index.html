@@ -19,103 +19,35 @@
   <div id="app">
     <v-app>
       <v-container style="padding: 0px;">
-        <v-col cols="12">
-          <v-card>
-            <!-- <v-img
-              src="https://media.licdn.com/dms/image/C4E16AQFNiisnXfdWrQ/profile-displaybackgroundimage-shrink_350_1400/0/1656328382114?e=1712793600&v=beta&t=m2xpF4PfzswHMI8P8vqylXo-F4G7MBoc53oDOUdXQ_U"></v-img> -->
+        <!--  <v-col cols="12">
+           <v-card>
+           <v-img
+              src="https://media.licdn.com/dms/image/C4E16AQFNiisnXfdWrQ/profile-displaybackgroundimage-shrink_350_1400/0/1656328382114?e=1712793600&v=beta&t=m2xpF4PfzswHMI8P8vqylXo-F4G7MBoc53oDOUdXQ_U"></v-img> 
           </v-card>
-        </v-col>
+        </v-col> -->
         <v-col cols="12">
-          <v-expansion-panels focusable class="mt-1">
-            <v-expansion-panel>
-              <v-expansion-panel-header color="grey lighten-3">
-                La Escala de Compasión (EC) - Instrucciones:
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <v-card-text>
-                  Por favor, lee cada afirmación cuidadosamente antes de responder. <br>
-                  Responde de acuerdo a lo que realmente refleja tu experiencia en lugar de lo que crees que debería ser
-                  tu experiencia.
-                  <br>
-                  Indica con qué frecuencia te comportas de la manera indicada, utilizando la siguiente escala: <br><br>
-                  <strong> 1 - Casi nunca - 2 - 3 - 4 - 5 Casi siempre </strong>
-                </v-card-text>
-
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
-
           <v-form v-model="form.valid">
             <v-container>
-              <v-container>
-                <v-row>
-                  <!-- <v-col cols="8">
-                    <v-text-field v-model="form.name" label="Nombre" required :rules="[rules.minChars]"></v-text-field>
-                  </v-col> -->
-                  <v-col cols="4" sm="2">
-                    <v-select v-model="form.age" :items="form.ageOptions" label="Edad" required></v-select>
-                  </v-col>
-                  <v-col cols="6" sm="2">
-                    <v-select v-model="form.gender" :items="form.genders" label="Género" required></v-select>
-                  </v-col>
-                  <!-- <v-col cols="8" sm="8">
-                    <v-text-field v-model="form.email" label="Correo" required :rules="[rules.isEmail]"></v-text-field>
-                  </v-col> -->
-                  <v-col cols="6" sm="4">
-                    <v-select v-model="form.industry" :items="form.industrys" label="Industria" required></v-select>
-                  </v-col>
-                  <v-col cols="6" sm="4">
-                    <v-select v-model="form.companySize" :items="form.sizes" label="Tamaño de la Empresa"
-                      required></v-select>
-                  </v-col>
-                  <v-col cols="6" sm="4">
-                    <v-select v-model="form.country" :items="form.countrys" label="Pais" required></v-select>
-                  </v-col>
-                  <v-col cols="12" v-if="sessionName">
-                    <v-text-field v-model="form.sessionName" label="Notas"></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
               <v-row v-for="(question, index) in form.questions" :key="index" class="mt-1">
                 <v-col class="mt-0">
                   <v-card color="grey lighten-4" class="mt-0">
-                    <v-card-text style="font-size: 18px; color:#303030">{{ index + 1 }}) {{ question }}</v-card-text>
-                    <v-card-actions>
-                      <div class="text-center" class="w-16 md:w-32 lg:w-48">
-                        <v-btn-toggle v-model="form.answers[index]" color="green" group rounded required
-                          @change="isDisabled" :rules="[rules.required]">
-                          <v-tooltip bottom>
-                            <template v-slot:activator="{ on, attrs }">
-                              <v-btn v-bind="attrs" v-on="on" value=1>1</v-btn>
-                            </template>
-                            <span>Casi nunca</span>
-                          </v-tooltip>
-                          <v-btn value=2>2</v-btn>
-                          <v-btn value=3>3</v-btn>
-                          <v-btn value=4>4</v-btn>
-                          <v-tooltip bottom>
-                            <template v-slot:activator="{ on, attrs }">
-                              <v-btn v-bind="attrs" v-on="on" value=5>5</v-btn>
-                            </template>
-                            <span>Casi siempre</span>
-                          </v-tooltip>
-                        </v-btn-toggle>
-                      </div>
-                    </v-card-actions>
-
-                    <v-alert v-if="form.answers[index] == 1" color="light-green darken-2" type="success">1 - Casi
-                      nunca</v-alert>
-                    <v-alert v-if="form.answers[index] == 2" color="light-green darken-2" type="success">2</v-alert>
-                    <v-alert v-if="form.answers[index] == 3" color="light-green darken-2" type="success">3</v-alert>
-                    <v-alert v-if="form.answers[index] == 4" color="light-green darken-2" type="success">4</v-alert>
-                    <v-alert v-if="form.answers[index] == 5" color="light-green darken-2" type="success">5 - Casi
-                      siempre</v-alert>
-
+                    <v-container fluid>
+                      <v-card-text style="font-size: 18px; color:#303030">
+                        {{ index + 1 }}) {{ question.question }}
+                      </v-card-text>
+                      <v-radio-group class="ml-6">
+                        <v-radio v-for="answer in question.answers" :key="answer" :label="answer.text" :value="answer">
+                        </v-radio>
+                      </v-radio-group>
+                    </v-container>
                   </v-card>
                 </v-col>
               </v-row>
-              <v-btn @click="submitForm" :disabled="isDisabled()" class="mt-4" color="primary">{{ form.loading ?
-                'Enviando...' : 'Enviar' }}</v-btn>
+
+              <v-btn @click="submitForm" :disabled="isDisabled()" class="mt-4" color="primary">
+                {{ form.loading ? 'Enviando...' : 'Enviar' }}
+              </v-btn>
+
               <v-progress-circular v-if="form.loading" indeterminate color="primary"></v-progress-circular>
               <v-icon v-if="form.successMessage" color="green darken-2">mdi-checkbox-marked-circle</v-icon>
               <span v-if="form.successMessage">{{ form.successMessage }}</span>
@@ -124,26 +56,22 @@
                 ¡Gracias por completar tu examen! <br>
                 A continuación, te presentamos tus resultados: <br><br>
 
-                Total de puntos:  <strong> {{ form.answerTotal }}</strong> <br>
-                Promedio de puntos:  <strong> {{ form.answerAverage }}</strong> <br>
+                Total de puntos: <strong> {{ form.answerTotal }}</strong> <br>
+                Promedio de puntos: <strong> {{ form.answerAverage }}</strong> <br>
                 Resultado: <strong> {{ form.scaleResult }}</strong> <br>
 
               </v-alert>
             </v-container>
           </v-form>
-          <v-card>
-            <v-card-text style="font-size: 12px;">
-              Reference: Pommier, E., Neff, K. D. & Tóth-Király I. (2019). The development and validation of the
-              Compassion Scale. Assessment, 21-39.
-            </v-card-text>
-          </v-card>
         </v-col>
-        <v-footer padless>
+
+        <v-footer fixed padless>
           <v-col class="text-center" cols="12" style="font-size: 10px;">
             <strong>{{ new Date().getFullYear() }} — Develop by <a
                 href="https://www.linkedin.com/in/fernandoortizmello/" target="_blank">Fernando</a></strong>
           </v-col>
         </v-footer>
+
       </v-container>
     </v-app>
   </div>
@@ -157,28 +85,37 @@
           hover: false,
           form: {
             answers: Array(16).fill(0),
-            scriptUrl: 'https://script.google.com/macros/s/AKfycbzFwFkxH8KtZ1xciZ3x3wMpP0X7PWOS1l7mvpSJItd9J23gtPZAXmDBhwztGFtPmBVk/exec',
+            scriptUrl: 'https://script.google.com/macros/s/AKfycbyc_-hf_DVv4DGwZeQqbCBvTJH6LpXysnhje_BaRbg4_dpVbysHhixMN6p8HMnudhev/exec',
             loading: false,
             successMessage: '',
             scaleResult: '',
             sessionName: '',
             questions: [
-              "Presto mucha atención cuando otras personas me hablan sobre sus problemas.",
-              "Si veo a alguien pasando por un momento difícil, intento ser comprensivo con esa persona.",
-              "No me preocupo por los problemas de otras personas.",
-              "Me doy cuenta de que todos nos sentimos deprimidos a veces, es parte del ser humano.",
-              "Me doy cuenta cuando la gente está molesta, incluso si no dicen nada.",
-              "Me gusta estar ahí para los demás en tiempos de dificultad.",
-              "Pienso poco en las preocupaciones de los demás.",
-              "Siento que es importante reconocer que todas las personas tienen debilidades y nadie es perfecto.",
-              "Escucho pacientemente cuando la gente me cuenta sus problemas.",
-              "Mi corazón se conmueve por las personas que están infelices.",
-              "Intento evitar a las personas que están experimentando mucho dolor.",
-              "Siento que el sufrimiento es sólo una parte de la experiencia humana común.",
-              "Cuando la gente me cuenta sus problemas, intento mantener una perspectiva equilibrada sobre la situación.",
-              "Cuando otros sienten tristeza, intento consolarlos.",
-              "No puedo conectar realmente con otras personas cuando están sufriendo.",
-              "A pesar de mis diferencias con los demás, sé que todos sienten dolor igual que yo.",
+              {
+                question: "Quando está triste ou estressado, como costuma lidar com as emoções?",
+                answers: [
+                  { text: "Como algo imediatamente, pois sei que só a comida pode me confortar", points: 3 },
+                  { text: "Opto por fazer alguma atividade que me distraía e me traga prazer", points: 2 },
+                  { text: "Tento fugir da comida me distrair, porém acabo comendo um pouco", points: 1 }
+                ]
+              },
+              {
+                question: "Como você descreveria sua relação com a comida?",
+                answers: [
+                  { text: "Como apenas quando estou com fome e opto por comida saudável.", points: 3 },
+                  { text: "Como qualquer alimento e em excesso por emoção ou tédio", points: 1 },
+                  { text: "Como apenas quando estou com fome, mas como qualquer tipo de alimento", points: 2 }
+                ]
+              },
+              {
+                question: "Quando se depara com um alimento tentador, qual é sua reação inicial?",
+                answers: [
+                  { text: "Resistir e não comer", points: 3 },
+                  { text: "Comer um pouco e parar", points: 2 },
+                  { text: "Comer em grande quantidade", points: 1 }
+                ]
+              },
+              // Continuar para as próximas perguntas...
             ],
             industrys: [
               'Gobierno y servicios públicos',
