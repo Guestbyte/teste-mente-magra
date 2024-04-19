@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Teste Mente Magra</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script> -->
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.7.1/dist/vuetify.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.7.1/dist/vuetify.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <v-app>
+      <v-container style="padding: 0px;">
+        <v-col cols="12">
+          <v-card>
+            <!-- <v-img
+              src="https://media.licdn.com/dms/image/C4E16AQFNiisnXfdWrQ/profile-displaybackgroundimage-shrink_350_1400/0/1656328382114?e=1712793600&v=beta&t=m2xpF4PfzswHMI8P8vqylXo-F4G7MBoc53oDOUdXQ_U"></v-img> -->
+          </v-card>
+        </v-col>
+        <v-col cols="12">
+          <v-expansion-panels focusable class="mt-1">
+            <v-expansion-panel>
+              <v-expansion-panel-header color="grey lighten-3">
+                La Escala de Compasión (EC) - Instrucciones:
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-card-text>
+                  Por favor, lee cada afirmación cuidadosamente antes de responder. <br>
+                  Responde de acuerdo a lo que realmente refleja tu experiencia en lugar de lo que crees que debería ser
+                  tu experiencia.
+                  <br>
+                  Indica con qué frecuencia te comportas de la manera indicada, utilizando la siguiente escala: <br><br>
+                  <strong> 1 - Casi nunca - 2 - 3 - 4 - 5 Casi siempre </strong>
+                </v-card-text>
+
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+
+          <v-form v-model="form.valid">
+            <v-container>
+              <v-container>
+                <v-row>
+                  <!-- <v-col cols="8">
+                    <v-text-field v-model="form.name" label="Nombre" required :rules="[rules.minChars]"></v-text-field>
+                  </v-col> -->
+                  <v-col cols="4" sm="2">
+                    <v-select v-model="form.age" :items="form.ageOptions" label="Edad" required></v-select>
+                  </v-col>
+                  <v-col cols="6" sm="2">
+                    <v-select v-model="form.gender" :items="form.genders" label="Género" required></v-select>
+                  </v-col>
+                  <!-- <v-col cols="8" sm="8">
+                    <v-text-field v-model="form.email" label="Correo" required :rules="[rules.isEmail]"></v-text-field>
+                  </v-col> -->
+                  <v-col cols="6" sm="4">
+                    <v-select v-model="form.industry" :items="form.industrys" label="Industria" required></v-select>
+                  </v-col>
+                  <v-col cols="6" sm="4">
+                    <v-select v-model="form.companySize" :items="form.sizes" label="Tamaño de la Empresa"
+                      required></v-select>
+                  </v-col>
+                  <v-col cols="6" sm="4">
+                    <v-select v-model="form.country" :items="form.countrys" label="Pais" required></v-select>
+                  </v-col>
+                  <v-col cols="12" v-if="sessionName">
+                    <v-text-field v-model="form.sessionName" label="Notas"></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <v-row v-for="(question, index) in form.questions" :key="index" class="mt-1">
+                <v-col class="mt-0">
+                  <v-card color="grey lighten-4" class="mt-0">
+                    <v-card-text style="font-size: 18px; color:#303030">{{ index + 1 }}) {{ question }}</v-card-text>
+                    <v-card-actions>
+                      <div class="text-center" class="w-16 md:w-32 lg:w-48">
+                        <v-btn-toggle v-model="form.answers[index]" color="green" group rounded required
+                          @change="isDisabled" :rules="[rules.required]">
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn v-bind="attrs" v-on="on" value=1>1</v-btn>
+                            </template>
+                            <span>Casi nunca</span>
+                          </v-tooltip>
+                          <v-btn value=2>2</v-btn>
+                          <v-btn value=3>3</v-btn>
+                          <v-btn value=4>4</v-btn>
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-btn v-bind="attrs" v-on="on" value=5>5</v-btn>
+                            </template>
+                            <span>Casi siempre</span>
+                          </v-tooltip>
+                        </v-btn-toggle>
+                      </div>
+                    </v-card-actions>
+
+                    <v-alert v-if="form.answers[index] == 1" color="light-green darken-2" type="success">1 - Casi
+                      nunca</v-alert>
+                    <v-alert v-if="form.answers[index] == 2" color="light-green darken-2" type="success">2</v-alert>
+                    <v-alert v-if="form.answers[index] == 3" color="light-green darken-2" type="success">3</v-alert>
+                    <v-alert v-if="form.answers[index] == 4" color="light-green darken-2" type="success">4</v-alert>
+                    <v-alert v-if="form.answers[index] == 5" color="light-green darken-2" type="success">5 - Casi
+                      siempre</v-alert>
+
+                  </v-card>
+                </v-col>
+              </v-row>
+              <v-btn @click="submitForm" :disabled="isDisabled()" class="mt-4" color="primary">{{ form.loading ?
+                'Enviando...' : 'Enviar' }}</v-btn>
+              <v-progress-circular v-if="form.loading" indeterminate color="primary"></v-progress-circular>
+              <v-icon v-if="form.successMessage" color="green darken-2">mdi-checkbox-marked-circle</v-icon>
+              <span v-if="form.successMessage">{{ form.successMessage }}</span>
+              <v-alert v-if="form.successMessage" border="top" colored-border type="info" elevation="2" class="mt-2">
+
+                ¡Gracias por completar tu examen! <br>
+                A continuación, te presentamos tus resultados: <br><br>
+
+                Total de puntos:  <strong> {{ form.answerTotal }}</strong> <br>
+                Promedio de puntos:  <strong> {{ form.answerAverage }}</strong> <br>
+                Resultado: <strong> {{ form.scaleResult }}</strong> <br>
+
+              </v-alert>
+            </v-container>
+          </v-form>
+          <v-card>
+            <v-card-text style="font-size: 12px;">
+              Reference: Pommier, E., Neff, K. D. & Tóth-Király I. (2019). The development and validation of the
+              Compassion Scale. Assessment, 21-39.
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-footer padless>
+          <v-col class="text-center" cols="12" style="font-size: 10px;">
+            <strong>{{ new Date().getFullYear() }} — Develop by <a
+                href="https://www.linkedin.com/in/fernandoortizmello/" target="_blank">Fernando</a></strong>
+          </v-col>
+        </v-footer>
+      </v-container>
+    </v-app>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+      data() {
+        return {
+          hover: false,
+          form: {
+            answers: Array(16).fill(0),
+            scriptUrl: 'https://script.google.com/macros/s/AKfycbzFwFkxH8KtZ1xciZ3x3wMpP0X7PWOS1l7mvpSJItd9J23gtPZAXmDBhwztGFtPmBVk/exec',
+            loading: false,
+            successMessage: '',
+            scaleResult: '',
+            sessionName: '',
+            questions: [
+              "Presto mucha atención cuando otras personas me hablan sobre sus problemas.",
+              "Si veo a alguien pasando por un momento difícil, intento ser comprensivo con esa persona.",
+              "No me preocupo por los problemas de otras personas.",
+              "Me doy cuenta de que todos nos sentimos deprimidos a veces, es parte del ser humano.",
+              "Me doy cuenta cuando la gente está molesta, incluso si no dicen nada.",
+              "Me gusta estar ahí para los demás en tiempos de dificultad.",
+              "Pienso poco en las preocupaciones de los demás.",
+              "Siento que es importante reconocer que todas las personas tienen debilidades y nadie es perfecto.",
+              "Escucho pacientemente cuando la gente me cuenta sus problemas.",
+              "Mi corazón se conmueve por las personas que están infelices.",
+              "Intento evitar a las personas que están experimentando mucho dolor.",
+              "Siento que el sufrimiento es sólo una parte de la experiencia humana común.",
+              "Cuando la gente me cuenta sus problemas, intento mantener una perspectiva equilibrada sobre la situación.",
+              "Cuando otros sienten tristeza, intento consolarlos.",
+              "No puedo conectar realmente con otras personas cuando están sufriendo.",
+              "A pesar de mis diferencias con los demás, sé que todos sienten dolor igual que yo.",
+            ],
+            industrys: [
+              'Gobierno y servicios públicos',
+              'Productos de consumo y venta minorista',
+              'Telecomunicaciones y medios',
+              'Banca y mercados de capitales',
+              'Productos industriales y construcción',
+              'Seguros',
+              'Petróleo y gas',
+              'Ciencias de la vida',
+              'Energía y servicios públicos',
+              'Automoción',
+              'Otros no identificados'
+            ],
+            valid: false,
+            name: '',
+            age: null,
+            // ageOptions: Array.from({ length: 82 }, (value, index) => index + 18),
+            ageOptions: [
+              '0-17 años',
+              '18-24 años',
+              '25-34 años',
+              '35-44 años',
+              '45-54 años',
+              '55-64 años',
+              '65+ años'
+            ],
+            countrys: [
+              'España',
+              'Albania',
+              'Alemania',
+              'Andorra',
+              'Armenia',
+              'Austria',
+              'Azerbaiyán',
+              'Bélgica',
+              'Bielorrusia',
+              'Bolivia',
+              'Bosnia y Herzegovina',
+              'Brasil',
+              'Canadá',
+              'Chile',
+              'China',
+              'Chipre',
+              'Ciudad del Vaticano',
+              'Colombia',
+              'Corea del Sur',
+              'Croacia',
+              'Dinamarca',
+              'Ecuador',
+              'Eslovaquia',
+              'Eslovenia',
+              'Estonia',
+              'Estados Unidos',
+              'Finlandia',
+              'Francia',
+              'Georgia',
+              'Grecia',
+              'Hungría',
+              'India',
+              'Irlanda',
+              'Islandia',
+              'Italia',
+              'Japón',
+              'Kazajistán',
+              'Letonia',
+              'Liechtenstein',
+              'Lituania',
+              'Luxemburgo',
+              'Malasia',
+              'Malta',
+              'Moldavia',
+              'Mónaco',
+              'Montenegro',
+              'México',
+              'Noruega',
+              'Países Bajos',
+              'Paraguay',
+              'Perú',
+              'Polonia',
+              'Portugal',
+              'Reino Unido',
+              'República Checa',
+              'Rumanía',
+              'Rusia',
+              'San Marino',
+              'Serbia',
+              'Suecia',
+              'Suiza',
+              'Ucrania',
+              'Uruguay',
+              'Venezuela'
+            ],
+            gender: '',
+            industry: '',
+            email: '',
+            companysize: '',
+            sizes: [
+              '1-10 empleados',
+              '11-50 empleados',
+              '51-200 empleados',
+              '201-500 empleados',
+              '501-1000 empleados',
+              'Más de 1000 empleados',
+            ],
+            genders: ['Masculino', 'Femenino'],
+          },
+          rules: {
+            minChars: value => value.length >= 3 || 'Mínimo 3 caracteres',
+            isEmail: value => /.+@.+\..+/.test(value) || 'Insira um endereço de email válido',
+          }
+        };
+      },
+      computed: {
+        sessionName() {
+          let sessionName = String(new URLSearchParams(window.location.search).get('name'));
+          this.form.sessionName = sessionName;
+          return (sessionName == 'null') ? false : sessionName;
+        },
+        debugMode() {
+          return Boolean(new URLSearchParams(window.location.search).get('debug'));
+        },
+      },
+      methods: {
+        isDisabled() {
+          return !this.form.valid || Boolean(this.form.answers.some((value) => value == 0))
+        },
+        onChange() {
+          isDisabled() ? this.form.valid = false : this.form.valid = true
+        },
+        reverseAnswer(answer) {
+          const reversedValues = {
+            1: 5,
+            2: 4,
+            3: 3,
+            4: 2,
+            5: 1
+          };
+          return reversedValues[answer] || answer;
+        },
+        submitForm() {
+          if (!this.form.valid) {
+            this.form.successMessage = 'Por favor, rellena el formulario correctamente!';
+            return;
+          }
+          this.form.loading = true;
+          const formData = new FormData();
+          formData.append('Name', this.form.name);
+          formData.append('Gender', this.form.gender);
+          formData.append('Email', this.form.email);
+          formData.append('Age', this.form.age);
+          formData.append('Industry', this.form.industry);
+          formData.append('Company Size', this.form.companySize);
+          formData.append('Country', this.form.country);
+          formData.append('Details', this.form.sessionName);
+
+          let total = Number(0);
+          this.form.answers.forEach((answer, index) => {
+            index = index + 1;
+
+            let reversedScored = [3, 7, 11, 15].indexOf(index) !== -1;
+            if (reversedScored) answer = this.reverseAnswer(answer);
+
+            formData.append(`answer${index}`, answer);
+            total += Number(answer);
+          });
+          formData.append('answerTotal', total);
+          let answerAverage = (total / this.form.questions.length).toFixed(2);
+          formData.append('answerAverage', answerAverage);
+
+          let scaleResult = null;
+          if (answerAverage <= 2.49) scaleResult = 'BAJO';
+          if (answerAverage >= 2.5 && answerAverage <= 3.5) scaleResult = 'MODERADO';
+          if (answerAverage >= 3.51) scaleResult = 'ALTO';
+          formData.append('scaleResult', scaleResult);
+
+          console.table('Submitting formData:', ...formData);
+
+          fetch(this.form.scriptUrl, { method: 'POST', body: formData })
+            .then(response => response.json())
+            .then(data => {
+              this.form.successMessage = '¡Enviado con éxito! ';
+              this.form.scaleResult = scaleResult;
+              this.form.answerTotal = total;
+              this.form.answerAverage = answerAverage;
+              this.form.loading = false;
+
+              this.form.name = '';
+              this.form.email = '';
+              this.form.country = '';
+              this.form.gender = '';
+              this.form.age = '';
+              this.form.industry = '';
+              this.form.companySize = '';
+              this.form.answers.forEach((answer, index) => this.form.answers[index] = 0);
+            })
+            .catch(error => {
+              console.error('Error submitting form:', error);
+              this.form.loading = false;
+            })
+        },
+      },
+    });
+  </script>
+</body>
+
+</html>
