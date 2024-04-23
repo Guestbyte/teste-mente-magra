@@ -26,9 +26,59 @@
               src="https://media.licdn.com/dms/image/C4E16AQFNiisnXfdWrQ/profile-displaybackgroundimage-shrink_350_1400/0/1656328382114?e=1712793600&v=beta&t=m2xpF4PfzswHMI8P8vqylXo-F4G7MBoc53oDOUdXQ_U"></v-img> 
           </v-card>
         </v-col> -->
+
+
         <v-col cols="12">
+
+
+          <!-- <v-expansion-panels focusable class="mt-1">
+            <v-expansion-panel>
+              <v-expansion-panel-header color="grey lighten-3">
+                La Escala de Compasión (EC) - Instrucciones:
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <v-card-text>
+                  Por favor, lee cada afirmación cuidadosamente antes de responder. <br>
+                  Responde de acuerdo a lo que realmente refleja tu experiencia en lugar de lo que crees que debería ser
+                  tu experiencia.
+                  <br>
+                  Indica con qué frecuencia te comportas de la manera indicada, utilizando la siguiente escala: <br><br>
+                  <strong> 1 - Casi nunca - 2 - 3 - 4 - 5 Casi siempre </strong>
+                </v-card-text>
+
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels> -->
+
+
+
+
+
           <v-form v-model="form.valid">
             <v-container>
+
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="12">
+                    <v-text-field v-model="form.name" label="Nome completo" required
+                      :rules="[rules.minChars]"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="12">
+                    <v-text-field v-model="form.email" label="E-Mail válido" required
+                      :rules="[rules.isEmail]"></v-text-field>
+                  </v-col>
+                  <v-col cols="6" sm="6">
+                    <v-select v-model="form.age" :items="form.ageOptions" label="Idade" required
+                      :rules="[rules.minChars]"></v-select>
+                  </v-col>
+                  <v-col cols="6" sm="6">
+                    <v-text-field v-model="form.weight" label="Peso (Kg)" required
+                      :rules="[rules.isNumber]"></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+
+
               <v-row v-for="(question, index) in form.questions" :key="index" class="mt-1">
                 <v-col class="mt-0">
                   <v-card color="grey lighten-4" class="mt-0">
@@ -85,12 +135,10 @@
       data() {
         return {
           form: {
-            answers: Array(),
             scriptUrl: 'https://script.google.com/macros/s/AKfycbyc_-hf_DVv4DGwZeQqbCBvTJH6LpXysnhje_BaRbg4_dpVbysHhixMN6p8HMnudhev/exec',
             loading: false,
             successMessage: '',
             scaleResult: '',
-            sessionName: '',
             questions: [
               {
                 question: "Quando está triste ou estressado, como costuma lidar com as emoções?",
@@ -104,8 +152,8 @@
                 question: "Como você descreveria sua relação com a comida?",
                 answers: [
                   { text: "Como apenas quando estou com fome e opto por comida saudável.", points: 1 },
-                  { text: "Como qualquer alimento e em excesso por emoção ou tédio", points: 2 },
-                  { text: "Como apenas quando estou com fome, mas como qualquer tipo de alimento", points: 3 },
+                  { text: "Como apenas quando estou com fome, mas como qualquer tipo de alimento", points: 2 },
+                  { text: "Como qualquer alimento e em excesso por emoção ou tédio", points: 3 },
                 ]
               },
               {
@@ -119,49 +167,49 @@
               {
                 question: "Como você se sente após comer uma refeição grande?",
                 answers: [
-                  { text: "Satisfeito e confortável", points: 1 },
-                  { text: "Culpado ou arrependido", points: 2 },
-                  { text: "Desconfortável e pesado, mas sem culpa.", points: 3 }
+                  { text: "Culpado ou arrependido", points: 1 },
+                  { text: "Desconfortável e pesado, mas sem culpa.", points: 2 },
+                  { text: "Satisfeito por ter comido tudo que queria, mesmo sem fome.", points: 3 },
                 ]
               },
               {
                 question: "Quando está entediado, o que costuma fazer?",
                 answers: [
-                  { text: "Maioria das vezes procuro algo para comer", points: 1 },
-                  { text: "Busco atividades físicas, criativas ou produtivas", points: 2 },
-                  { text: "Relaxo e descanso", points: 3 }
+                  { text: "Busco atividades físicas, criativas ou produtivas", points: 1 },
+                  { text: "Relaxo e descanso", points: 2 },
+                  { text: "Maioria das vezes procuro algo para comer", points: 3 },
                 ]
               },
               {
                 question: "Como é sua relação com as porções de comida?",
                 answers: [
                   { text: "Controlada e consciente", points: 1 },
-                  { text: "Difícil de controlar", points: 2 },
-                  { text: "Varia dependendo do dia", points: 3 }
+                  { text: "Varia dependendo do dia", points: 2 },
+                  { text: "Difícil de controlar", points: 3 },
                 ]
               },
               {
                 question: "Quando está com fome entre as refeições, o que costuma comer?",
                 answers: [
-                  { text: "Frutas ou lanches saudáveis", points: 1 },
-                  { text: "Geralmente opto por comidas nao saudáveis - como fast food, doces e pizzas.", points: 2 },
-                  { text: "Não costumo comer sem fome física", points: 3 }
+                  { text: "Não costumo comer sem fome física", points: 1 },
+                  { text: "Frutas ou lanches saudáveis", points: 2 },
+                  { text: "Geralmente opto por comidas nao saudáveis - como fast food, doces e pizzas.", points: 3 },
                 ]
               },
               {
                 question: "Como você lida com a sensação de saciedade durante uma refeição?",
                 answers: [
                   { text: "Paro de comer quando estou satisfeito", points: 1 },
-                  { text: "Continuo comendo até me sentir muito cheio", points: 2 },
-                  { text: "Não percebo a sensação de saciedade", points: 3 }
+                  { text: "Continuo comendo até acabar a comida do prato", points: 2 },
+                  { text: "Continuo comendo até me sentir muito cheio", points: 3 }
                 ]
               },
               {
                 question: "Como você se sente em relação ao seu peso e aparência?",
                 answers: [
                   { text: "Satisfeito e confiante", points: 1 },
-                  { text: "Inseguro ou insatisfeito", points: 2 },
-                  { text: "Não penso muito sobre isso", points: 3 }
+                  { text: "Não penso muito sobre isso", points: 2 },
+                  { text: "Inseguro ou insatisfeito", points: 3 },
                 ]
               },
               {
@@ -177,7 +225,7 @@
                 answers: [
                   { text: "Não, eu nunca saio da dieta, sempre me convenço que me alimentar bem é o melhor para mim.", points: 1 },
                   { text: "Um pouco, é uma vozinha que às vezes vence, mas na maioria das vezes eu consigo vencer e me mantenho firme na dieta.", points: 2 },
-                  { text: "Sim, existe uma vozinha que está sempre me trazendo justificativas convincentes e ela é sempre mais forte do que eu.", points: 3 }
+                  { text: "Sim, existe uma vozinha que está s,empre me trazendo justificativas convincentes e ela é sempre mais forte do que eu.", points: 3 }
                 ]
               },
               {
@@ -189,18 +237,19 @@
                 ]
               },
             ],
+            answers: Array(),
             valid: false,
             name: '',
-            age: null,
-            // ageOptions: Array.from({ length: 82 }, (value, index) => index + 18),
+            age: '',
+            ageOptions: Array.from({ length: 82 }, (value, index) => index + 18),
             ageOptions: [
-              '0-17 años',
-              '18-24 años',
-              '25-34 años',
-              '35-44 años',
-              '45-54 años',
-              '55-64 años',
-              '65+ años'
+              '0-17',
+              '18-24',
+              '25-34',
+              '35-44',
+              '45-54',
+              '55-64',
+              '65+'
             ],
             weight: '',
             email: '',
@@ -208,31 +257,42 @@
           rules: {
             minChars: value => value.length >= 3 || 'Mínimo 3 caracteres',
             isEmail: value => /.+@.+\..+/.test(value) || 'Insira um endereço de email válido',
+            isNumber: value => !isNaN(value) || 'Insira quanto você pesa en Kilos.',
           }
         };
       },
       computed: {
-        sessionName() {
-          let sessionName = String(new URLSearchParams(window.location.search).get('name'));
-          this.form.sessionName = sessionName;
-          return (sessionName == 'null') ? false : sessionName;
+        answerTotalPoints() {
+          let total = Number(0);
+          this.form.answers.forEach((answer, index) => {
+            if (!isNaN(answer.points)) total += Number(answer.points);
+          });
+          return total;
         },
+      },
+      mounted() {
+        this.form.answers = Array(this.form.questions.length).fill({});
       },
       methods: {
         isDisabled() {
-          return false
-          // return !this.form.valid || Boolean(this.form.answers.some((value) => value == 0))
+          // return false
+          return !this.form.valid
+            || Boolean(this.form.answers.some((answer) => isNaN(answer.points)))
+            || this.form.weight == ''
         },
         onChange() {
           isDisabled() ? this.form.valid = false : this.form.valid = true
         },
         submitForm() {
           console.table('Answers:', this.form.answers);
-          
-          // if (!this.form.valid) {
-          //   this.form.successMessage = 'Por favor, rellena el formulario correctamente!';
-          //   return;
-          // }
+          console.table('Answers total points:', this.answerTotalPoints);
+          console.table('Answers total points:', this.form.valid);
+          return;
+
+          if (!this.form.valid) {
+            this.form.successMessage = 'Por favor, rellena el formulario correctamente!';
+            return;
+          }
           const formData = new FormData();
           let total = Number(0);
           this.form.answers.forEach((answer, index) => {
@@ -240,10 +300,10 @@
             formData.append(`answer${index}`, answer.points);
             total += Number(answer.points);
           });
-          
-          if (total < 12) {
+
+          if (this.answerTotalPoints < 12) {
             this.form.successMessage = 'Por favor, rellena el formulario correctamente!';
-            console.table('Total Points:', total);
+            console.table('Total Points:', this.answerTotalPoints);
             return;
           }
 
