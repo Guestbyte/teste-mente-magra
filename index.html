@@ -101,18 +101,41 @@
               </v-btn>
 
               <v-progress-circular v-if="form.loading" indeterminate color="primary"></v-progress-circular>
-              <v-icon v-if="form.successMessage" color="green darken-2">mdi-checkbox-marked-circle</v-icon>
-              <span v-if="form.successMessage">{{ form.successMessage }}</span>
-              <v-alert v-if="form.successMessage" border="top" colored-border type="info" elevation="2" class="mt-2">
-
-                ¡Gracias por completar tu examen! <br>
-                A continuación, te presentamos tus resultados: <br><br>
-
-                Total de puntos: <strong> {{ form.answerTotal }}</strong> <br>
-                Promedio de puntos: <strong> {{ form.answerAverage }}</strong> <br>
-                Resultado: <strong> {{ form.scaleResult }}</strong> <br>
-
+              <v-alert v-if="form.successMessage" class="mt-2" type="success"> {{ form.successMessage }} </v-alert>
+              <!-- <v-icon v-if="form.successMessage" color="green darken-2">mdi-checkbox-marked-circle</v-icon> -->
+              <!-- <span v-if="form.successMessage">{{ form.successMessage }}</span> -->
+              <v-alert v-if="isDisabled() && !form.successMessage" class="mt-2" dense outlined type="error">{{ form.warningMessage }}
               </v-alert>
+
+              <v-alert v-if="this.calculateResult.level == 1 && form.successMessage" border="top" colored-border type="success" elevation="2" class="mt-2">
+              <!-- <v-alert border="top" colored-border type="success" elevation="2" class="mt-2"> -->
+                <b> MENTE MAGRA (Resultado Esperado): </b><br><br>
+                <b>Parabéns! </b>Você obteve o resultado de "<b>Mente Magra</b>" no teste. 
+                Isso indica que você está no caminho certo para alcançar seus objetivos de saúde e bem-estar. 
+                Sua mentalidade está alinhada com hábitos e comportamentos saudáveis, que promovem o emagrecimento de forma equilibrada.<br> 
+                Continue cultivando essas práticas positivas e mantenha-se firme no seu compromisso com um estilo de vida saudável. 
+              </v-alert>
+
+              <v-alert v-if="this.calculateResult.level == 2 && form.successMessage" border="top" colored-border type="warning" elevation="2" class="mt-2">
+              <!-- <v-alert  border="top" colored-border type="warning" elevation="2" class="mt-2"> -->
+                <b> MENTE GORDINHA (Intermediário): </b><br><br>
+                Você obteve o resultado de "<b>Mente Gordinha</b>" no teste. <br>
+                Isso indica que você está em um estágio intermediário em relação aos seus hábitos e comportamentos em direção ao emagrecimento saudável.
+                Enquanto você pode estar adotando algumas práticas saudáveis, também pode haver espaço para melhorias em certas áreas.
+                Este resultado é uma oportunidade para avaliar onde você pode fazer ajustes para alcançar seus objetivos com mais eficácia. <br><br>
+                <b>Continue buscando o equilíbrio e mantendo o foco em hábitos que promovam sua saúde física e mental.</b>
+              </v-alert>
+
+              <v-alert v-if="this.calculateResult.level == 3 && form.successMessage" border="top" colored-border type="error" elevation="2" class="mt-2">
+              <!-- <v-alert  border="top" colored-border type="error" elevation="2" class="mt-2"> -->
+                <b> MENTE GORDA (Resultado Preocupante): </b><br><br>
+                Seu resultado no teste foi classificado como "<b>Mente Gorda</b>". <br>
+                Isso sugere que seus hábitos e comportamentos atuais podem estar prejudicando sua saúde física e mental. 
+                É importante reconhecer que essa não é uma sentença definitiva, mas sim um ponto de partida para uma mudança positiva. 
+                <br>Este é um momento para refletir sobre suas escolhas e hábitos, e considerar quais passos você pode tomar para promover uma mudança positiva em direção a um estilo de vida mais saudável. 
+                <br>Lembre-se de que é possível transformar sua mentalidade e hábitos para alcançar seus objetivos de saúde e bem-estar.
+              </v-alert>
+
             </v-container>
           </v-form>
         </v-col>
@@ -138,6 +161,7 @@
             scriptUrl: 'https://script.google.com/macros/s/AKfycbyc_-hf_DVv4DGwZeQqbCBvTJH6LpXysnhje_BaRbg4_dpVbysHhixMN6p8HMnudhev/exec',
             loading: false,
             successMessage: '',
+            warningMessage: false,
             scaleResult: '',
             questions: [
               {
@@ -241,7 +265,6 @@
             valid: false,
             name: '',
             age: '',
-            ageOptions: Array.from({ length: 82 }, (value, index) => index + 18),
             ageOptions: [
               '0-17',
               '18-24',
@@ -269,9 +292,31 @@
           });
           return total;
         },
+        calculateResult() {
+          let total = this.answerTotalPoints;
+          if (total < 12) {
+            text = 'INVALIDO'
+            level = 0
+          };
+          if (total >= 13 && total <= 16) {
+            text = 'MENTE MAGRA'
+            level = 1
+          };
+          if (total >= 17 && total <= 26) {
+            text = 'MENTE GORDINHA'
+            level = 2
+          };
+          if (total >= 27) {
+            text = 'MENTE GORDA'
+            level = 3
+          };
+
+          return { total, text, level };
+        },
       },
       mounted() {
         this.form.answers = Array(this.form.questions.length).fill({});
+        this.form.warningMessage = 'Preencher todos os campos do formulario!';
       },
       methods: {
         isDisabled() {
@@ -285,14 +330,8 @@
         },
         submitForm() {
           console.table('Answers:', this.form.answers);
-          console.table('Answers total points:', this.answerTotalPoints);
-          console.table('Answers total points:', this.form.valid);
-          return;
+          console.table('Answers total points:', this.calculateResult);
 
-          if (!this.form.valid) {
-            this.form.successMessage = 'Por favor, rellena el formulario correctamente!';
-            return;
-          }
           const formData = new FormData();
           let total = Number(0);
           this.form.answers.forEach((answer, index) => {
@@ -301,16 +340,11 @@
             total += Number(answer.points);
           });
 
-          if (this.answerTotalPoints < 12) {
-            this.form.successMessage = 'Por favor, rellena el formulario correctamente!';
-            console.table('Total Points:', this.answerTotalPoints);
-            return;
-          }
-
           this.form.loading = true;
           formData.append('Nome', this.form.name);
           formData.append('Email', this.form.email);
           formData.append('Peso', this.form.weight);
+          formData.append('Idade', this.form.age);
           formData.append('answerTotal', total);
 
           let scaleResult = null;
@@ -324,15 +358,16 @@
           fetch(this.form.scriptUrl, { method: 'POST', body: formData })
             .then(response => response.json())
             .then(data => {
-              this.form.successMessage = '¡Enviado con éxito! ';
+              this.form.successMessage = 'Enviado com sucesso!';
               this.form.scaleResult = scaleResult;
               this.form.answerTotal = total;
               this.form.loading = false;
 
-              this.form.name = '';
-              this.form.email = '';
-              this.form.weight = '';
-              this.form.answers.forEach((answer, index) => this.form.answers[index] = 0);
+              // this.form.name = '';
+              // this.form.email = '';
+              // this.form.weight = '';
+              // this.form.age = '';
+              // this.form.answers.forEach((answer, index) => this.form.answers[index] = 0);
             })
             .catch(error => {
               console.error('Error submitting form:', error);

@@ -27,7 +27,7 @@ TODO
 https://www.instagram.com/julianaemagrecamente
 - [X] add questions and ansuwers, in orden
 https://pt.surveymonkey.com/r/MZSJH5V 
-- [ ] add result text
+- [X] add result text
 1. Mente Magra (Resultado Esperado):
    Parabéns! Você obteve o resultado de "Mente Magra" no teste. Isso indica que você está no caminho certo para alcançar seus objetivos de saúde e bem-estar. Sua mentalidade está alinhada com hábitos e comportamentos saudáveis, que promovem o emagrecimento de forma equilibrada. Continue cultivando essas práticas positivas e mantenha-se firme no seu compromisso com um estilo de vida saudável. 
 
