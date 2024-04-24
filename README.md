@@ -14,6 +14,7 @@ https://docs.google.com/spreadsheets/d/1mz5TFDgKlo8gWlXwxjCARy1y8qFswbHOdSnFgxbB
 
 https://www.instagram.com/julianaemagrecamente
 contate.me/juemagrecamente
+https://bit.ly/teste-mente-magra
 
 https://i.ibb.co/vBK0j3T/juliana-costa-logo.jpg
 
