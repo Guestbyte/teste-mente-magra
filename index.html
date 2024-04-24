@@ -20,13 +20,11 @@
     <v-app>
 
       <v-container style="padding: 0px;">
-        <!--  <v-col cols="12">
-           <v-card>
-           <v-img
-              src="https://media.licdn.com/dms/image/C4E16AQFNiisnXfdWrQ/profile-displaybackgroundimage-shrink_350_1400/0/1656328382114?e=1712793600&v=beta&t=m2xpF4PfzswHMI8P8vqylXo-F4G7MBoc53oDOUdXQ_U"></v-img> 
+        <v-col cols="12">
+          <v-card color="#000000" class="pa-4">
+            <v-img src="https://i.ibb.co/vBK0j3T/juliana-costa-logo.jpg" max-height="200" max-width="300" ></v-img>
           </v-card>
-        </v-col> -->
-
+        </v-col>
 
         <v-col cols="12">
 
@@ -104,36 +102,49 @@
               <v-alert v-if="form.successMessage" class="mt-2" type="success"> {{ form.successMessage }} </v-alert>
               <!-- <v-icon v-if="form.successMessage" color="green darken-2">mdi-checkbox-marked-circle</v-icon> -->
               <!-- <span v-if="form.successMessage">{{ form.successMessage }}</span> -->
-              <v-alert v-if="isDisabled() && !form.successMessage" class="mt-2" dense outlined type="error">{{ form.warningMessage }}
+              <v-alert v-if="isDisabled() && !form.successMessage" class="mt-2" dense outlined type="error">{{
+                form.warningMessage }}
               </v-alert>
 
-              <v-alert v-if="this.calculateResult.level == 1 && form.successMessage" border="top" colored-border type="success" elevation="2" class="mt-2">
-              <!-- <v-alert border="top" colored-border type="success" elevation="2" class="mt-2"> -->
+              <v-alert v-if="this.calculateResult.level == 1 && form.successMessage" border="top" colored-border
+                type="success" elevation="2" class="mt-2">
+                <!-- <v-alert border="top" colored-border type="success" elevation="2" class="mt-2"> -->
                 <b> MENTE MAGRA (Resultado Esperado): </b><br><br>
-                <b>Parabéns! </b>Você obteve o resultado de "<b>Mente Magra</b>" no teste. 
-                Isso indica que você está no caminho certo para alcançar seus objetivos de saúde e bem-estar. 
-                Sua mentalidade está alinhada com hábitos e comportamentos saudáveis, que promovem o emagrecimento de forma equilibrada.<br> 
-                Continue cultivando essas práticas positivas e mantenha-se firme no seu compromisso com um estilo de vida saudável. 
+                <b>Parabéns! </b>Você obteve o resultado de "<b>Mente Magra</b>" no teste.
+                Isso indica que você está no caminho certo para alcançar seus objetivos de saúde e bem-estar.
+                Sua mentalidade está alinhada com hábitos e comportamentos saudáveis, que promovem o emagrecimento de
+                forma equilibrada.<br>
+                Continue cultivando essas práticas positivas e mantenha-se firme no seu compromisso com um estilo de
+                vida saudável.
               </v-alert>
 
-              <v-alert v-if="this.calculateResult.level == 2 && form.successMessage" border="top" colored-border type="warning" elevation="2" class="mt-2">
-              <!-- <v-alert  border="top" colored-border type="warning" elevation="2" class="mt-2"> -->
+              <v-alert v-if="this.calculateResult.level == 2 && form.successMessage" border="top" colored-border
+                type="warning" elevation="2" class="mt-2">
+                <!-- <v-alert  border="top" colored-border type="warning" elevation="2" class="mt-2"> -->
                 <b> MENTE GORDINHA (Intermediário): </b><br><br>
                 Você obteve o resultado de "<b>Mente Gordinha</b>" no teste. <br>
-                Isso indica que você está em um estágio intermediário em relação aos seus hábitos e comportamentos em direção ao emagrecimento saudável.
-                Enquanto você pode estar adotando algumas práticas saudáveis, também pode haver espaço para melhorias em certas áreas.
-                Este resultado é uma oportunidade para avaliar onde você pode fazer ajustes para alcançar seus objetivos com mais eficácia. <br><br>
-                <b>Continue buscando o equilíbrio e mantendo o foco em hábitos que promovam sua saúde física e mental.</b>
+                Isso indica que você está em um estágio intermediário em relação aos seus hábitos e comportamentos em
+                direção ao emagrecimento saudável.
+                Enquanto você pode estar adotando algumas práticas saudáveis, também pode haver espaço para melhorias em
+                certas áreas.
+                Este resultado é uma oportunidade para avaliar onde você pode fazer ajustes para alcançar seus objetivos
+                com mais eficácia. <br><br>
+                <b>Continue buscando o equilíbrio e mantendo o foco em hábitos que promovam sua saúde física e
+                  mental.</b>
               </v-alert>
 
-              <v-alert v-if="this.calculateResult.level == 3 && form.successMessage" border="top" colored-border type="error" elevation="2" class="mt-2">
-              <!-- <v-alert  border="top" colored-border type="error" elevation="2" class="mt-2"> -->
+              <v-alert v-if="this.calculateResult.level == 3 && form.successMessage" border="top" colored-border
+                type="error" elevation="2" class="mt-2">
+                <!-- <v-alert  border="top" colored-border type="error" elevation="2" class="mt-2"> -->
                 <b> MENTE GORDA (Resultado Preocupante): </b><br><br>
                 Seu resultado no teste foi classificado como "<b>Mente Gorda</b>". <br>
-                Isso sugere que seus hábitos e comportamentos atuais podem estar prejudicando sua saúde física e mental. 
-                É importante reconhecer que essa não é uma sentença definitiva, mas sim um ponto de partida para uma mudança positiva. 
-                <br>Este é um momento para refletir sobre suas escolhas e hábitos, e considerar quais passos você pode tomar para promover uma mudança positiva em direção a um estilo de vida mais saudável. 
-                <br>Lembre-se de que é possível transformar sua mentalidade e hábitos para alcançar seus objetivos de saúde e bem-estar.
+                Isso sugere que seus hábitos e comportamentos atuais podem estar prejudicando sua saúde física e mental.
+                É importante reconhecer que essa não é uma sentença definitiva, mas sim um ponto de partida para uma
+                mudança positiva.
+                <br>Este é um momento para refletir sobre suas escolhas e hábitos, e considerar quais passos você pode
+                tomar para promover uma mudança positiva em direção a um estilo de vida mais saudável.
+                <br>Lembre-se de que é possível transformar sua mentalidade e hábitos para alcançar seus objetivos de
+                saúde e bem-estar.
               </v-alert>
 
             </v-container>
