@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Teste Mente Magra</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <!-- <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script> -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@3.5.17/dist/vuetify.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@3.5.17/dist/vuetify.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <v-app>
+      <v-container style="padding: 0px;">
+
+        <v-col cols="12">
+          <v-card color="#000000" class="pa-2 ma-0">
+            <v-img src="https://i.ibb.co/vBK0j3T/juliana-costa-logo.jpg" max-height="200" max-width="300"></v-img>
+          </v-card>
+          <v-chip class="mt-1 pa-4" label text-color="white" color="#5851DB" small
+            href="https://contate.me/juemagrecamente">
+            contate.me/juemagrecamente
+          </v-chip>
+          <v-chip class="mt-1 pa-4" color="#E1306C" text-color="white" small label
+            href="https://www.instagram.com/julianaemagrecamente">
+            <v-icon left>
+              mdi-instagram
+            </v-icon>
+            EmagrecaMente
+          </v-chip>
+        </v-col>
+
+        <v-col cols="12">
+          <v-form v-model="form.valid">
+            <v-container>
+
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="12">
+                    <v-text-field v-model="form.name" label="Nome completo" required
+                      :rules="[rules.minChars]"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="12">
+                    <v-text-field v-model="form.email" label="E-Mail válido" required
+                      :rules="[rules.isEmail]"></v-text-field>
+                  </v-col>
+                  <v-col cols="6" sm="6">
+                    <v-select v-model="form.age" :items="form.ageOptions" label="Idade" required
+                      :rules="[rules.minChars]"></v-select>
+                  </v-col>
+                  <v-col cols="6" sm="6">
+                    <v-text-field v-model="form.weight" label="Peso (Kg)" required
+                      :rules="[rules.isNumber]"></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+
+              <v-row v-for="(question, index) in form.questions" :key="index" class="mt-1">
+                <v-col class="mt-0">
+                  <v-card color="grey lighten-4" class="mt-0">
+                    <v-container fluid>
+                      <v-card-text style="font-size: 18px; color:#303030">
+                        {{ index + 1 }}) {{ question.question }}
+                      </v-card-text>
+                      <v-radio-group v-model="form.answers[index]" class="ml-6">
+                        <v-radio v-for="(answer, index) in question.answers" :key="index" :label="answer.text"
+                          :value="answer">
+                        </v-radio>
+                      </v-radio-group>
+                    </v-container>
+                  </v-card>
+                </v-col>
+              </v-row>
+
+              <v-btn @click="submitForm" :disabled="isDisabled()" class="mt-4" color="green">
+                {{ form.loading ? 'Enviando...' : 'Enviar' }}
+              </v-btn>
+
+              <v-progress-circular v-if="form.loading" indeterminate color="primary"></v-progress-circular>
+              <v-alert v-if="form.successMessage" class="mt-2" type="success"> {{ form.successMessage }} </v-alert>
+              <v-alert v-if="isDisabled() && !form.successMessage" class="mt-2" dense outlined type="error">{{
+                form.warningMessage }}
+              </v-alert>
+
+              <v-alert v-if="calculateResult.level == 1 && form.successMessage" border="top" colored-border
+                type="success" elevation="2" class="mt-2">
+                <b> MENTE MAGRA (Resultado Esperado): </b><br><br>
+                <b>Parabéns! </b>Você obteve o resultado de "<b>Mente Magra</b>" no teste.
+                Isso indica que você está no caminho certo para alcançar seus objetivos de saúde e bem-estar.
+                Sua mentalidade está alinhada com hábitos e comportamentos saudáveis, que promovem o emagrecimento de
+                forma equilibrada.<br>
+                Continue cultivando essas práticas positivas e mantenha-se firme no seu compromisso com um estilo de
+                vida saudável.
+              </v-alert>
+
+              <v-alert v-if="calculateResult.level == 2 && form.successMessage" border="top" colored-border
+                type="warning" elevation="2" class="mt-2">
+                <b> MENTE GORDINHA (Intermediário): </b><br><br>
+                Você obteve o resultado de "<b>Mente Gordinha</b>" no teste. <br>
+                Isso indica que você está em um estágio intermediário em relação aos seus hábitos e comportamentos em
+                direção ao emagrecimento saudável.
+                Enquanto você pode estar adotando algumas práticas saudáveis, também pode haver espaço para melhorias em
+                certas áreas.
+                Este resultado é uma oportunidade para avaliar onde você pode fazer ajustes para alcançar seus objetivos
+                com mais eficácia. <br><br>
+                <b>Continue buscando o equilíbrio e mantendo o foco em hábitos que promovam sua saúde física e
+                  mental.</b>
+              </v-alert>
+
+              <v-alert v-if="calculateResult.level == 3 && form.successMessage" border="top" colored-border
+                type="error" elevation="2" class="mt-2">
+                <b> MENTE GORDA (Resultado Preocupante): </b><br><br>
+                Seu resultado no teste foi classificado como "<b>Mente Gorda</b>". <br>
+                Isso sugere que seus hábitos e comportamentos atuais podem estar prejudicando sua saúde física e mental.
+                É importante reconhecer que essa não é uma sentença definitiva, mas sim um ponto de partida para uma
+                mudança positiva.
+                <br>Este é um momento para refletir sobre suas escolhas e hábitos, e considerar quais passos você pode
+                tomar para promover uma mudança positiva em direção a um estilo de vida mais saudável.
+                <br>Lembre-se de que é possível transformar sua mentalidade e hábitos para alcançar seus objetivos de
+                saúde e bem-estar.
+              </v-alert>
+
+            </v-container>
+          </v-form>
+        </v-col>
+
+        <v-footer fixed padless>
+          <v-col class="text-center" cols="12" style="font-size: 10px;">
+            <strong>{{ new Date().getFullYear() }} — Develop by <a
+                href="https://www.linkedin.com/in/fernandoortizmello/" target="_blank">Fernando</a></strong>
+          </v-col>
+        </v-footer>
+
+      </v-container>
+    </v-app>
+  </div>
+
+  <script>
+    const { createApp, ref, onMounted, reactive, computed } = Vue;
+    const { createVuetify } = Vuetify;
+    const vuetify = createVuetify()
+    const App = createApp({
+      setup() {
+        const form = reactive({
+          scriptUrl: 'https://script.google.com/macros/s/AKfycbyc_-hf_DVv4DGwZeQqbCBvTJH6LpXysnhje_BaRbg4_dpVbysHhixMN6p8HMnudhev/exec',
+          valid: true,
+          name: '',
+          age: '',
+          ageOptions: [
+            '0-17',
+            '18-24',
+            '25-34',
+            '35-44',
+            '45-54',
+            '55-64',
+            '65+'
+          ],
+          email: '',
+          weight: '',
+          questions: [
+            {
+              question: "Quando está triste ou estressado, como costuma lidar com as emoções?",
+              answers: [
+                { text: "Opto por fazer alguma atividade que me distraía e me traga prazer", points: 1 },
+                { text: "Tento fugir da comida me distrair, porém acabo comendo um pouco", points: 2 },
+                { text: "Como algo imediatamente, pois sei que só a comida pode me confortar", points: 3 },
+              ]
+            },
+            {
+              question: "Como você descreveria sua relação com a comida?",
+              answers: [
+                { text: "Como apenas quando estou com fome e opto por comida saudável.", points: 1 },
+                { text: "Como apenas quando estou com fome, mas como qualquer tipo de alimento", points: 2 },
+                { text: "Como qualquer alimento e em excesso por emoção ou tédio", points: 3 },
+              ]
+            },
+            {
+              question: "Quando se depara com um alimento tentador, qual é sua reação inicial?",
+              answers: [
+                { text: "Resistir e não comer", points: 1 },
+                { text: "Comer um pouco e parar", points: 2 },
+                { text: "Comer em grande quantidade", points: 3 },
+              ]
+            },
+            {
+              question: "Como você se sente após comer uma refeição grande?",
+              answers: [
+                { text: "Culpado ou arrependido", points: 1 },
+                { text: "Desconfortável e pesado, mas sem culpa.", points: 2 },
+                { text: "Satisfeito por ter comido tudo que queria, mesmo sem fome.", points: 3 },
+              ]
+            },
+            {
+              question: "Quando está entediado, o que costuma fazer?",
+              answers: [
+                { text: "Busco atividades físicas, criativas ou produtivas", points: 1 },
+                { text: "Relaxo e descanso", points: 2 },
+                { text: "Maioria das vezes procuro algo para comer", points: 3 },
+              ]
+            },
+            {
+              question: "Como é sua relação com as porções de comida?",
+              answers: [
+                { text: "Controlada e consciente", points: 1 },
+                { text: "Varia dependendo do dia", points: 2 },
+                { text: "Difícil de controlar", points: 3 },
+              ]
+            },
+            {
+              question: "Quando está com fome entre as refeições, o que costuma comer?",
+              answers: [
+                { text: "Não costumo comer sem fome física", points: 1 },
+                { text: "Frutas ou lanches saudáveis", points: 2 },
+                { text: "Geralmente opto por comidas nao saudáveis - como fast food, doces e pizzas.", points: 3 },
+              ]
+            },
+            {
+              question: "Como você lida com a sensação de saciedade durante uma refeição?",
+              answers: [
+                { text: "Paro de comer quando estou satisfeito", points: 1 },
+                { text: "Continuo comendo até acabar a comida do prato", points: 2 },
+                { text: "Continuo comendo até me sentir muito cheio", points: 3 }
+              ]
+            },
+            {
+              question: "Como você se sente em relação ao seu peso e aparência?",
+              answers: [
+                { text: "Satisfeito e confiante", points: 1 },
+                { text: "Não penso muito sobre isso", points: 2 },
+                { text: "Inseguro ou insatisfeito", points: 3 },
+              ]
+            },
+            {
+              question: "Você costuma planejar suas refeições com antecedência?",
+              answers: [
+                { text: "Sim, sempre faço um planejamento", points: 1 },
+                { text: "Às vezes, dependendo da semana", points: 2 },
+                { text: "Não, costumo decidir na hora", points: 3 }
+              ]
+            },
+            {
+              question: "Você mente para você mesma? Constantemente traz justificativas para se convencer a sair da dieta? SEJA SINCERA!",
+              answers: [
+                { text: "Não, eu nunca saio da dieta, sempre me convenço que me alimentar bem é o melhor para mim.", points: 1 },
+                { text: "Um pouco, é uma vozinha que às vezes vence, mas na maioria das vezes eu consigo vencer e me mantenho firme na dieta.", points: 2 },
+                { text: "Sim, existe uma vozinha que está s,empre me trazendo justificativas convincentes e ela é sempre mais forte do que eu.", points: 3 }
+              ]
+            },
+            {
+              question: "Você deixa de sair ou de encontrar alguém por não estar se sentindo bem com seu corpo? SEJA SINCERA!",
+              answers: [
+                { text: "Nunca, eu me sinto muito bem com meu corpo.", points: 1 },
+                { text: "Acontece às vezes, mas logo passa e eu saio feliz e leve.", points: 2 },
+                { text: "Acontece sempre, algumas vezes eu desmarco e outras eu até vou, mas me sinto péssima.", points: 3 }
+              ]
+            },
+          ],
+          answers: Array(),
+        })
+
+        const isDisabled = () => {
+          // return false
+          return !form.valid
+            || Boolean(form.answers.some((answer) => isNaN(answer.points)))
+            || form.weight == ''
+        };
+
+        const submitForm = () => {
+          form.loading = true;
+
+          const formData = new FormData();
+          formData.append('Nome', form.name);
+          formData.append('Email', form.email);
+          formData.append('Peso', form.weight);
+          formData.append('Idade', form.age);
+
+          let total = Number(0);
+          form.answers.forEach((answer, index) => {
+            index = index + 1;
+            formData.append(`answer${index}`, answer.points);
+            total += Number(answer.points);
+          });
+
+          formData.append('answerTotal', total);
+
+          let scaleResult = null;
+          if (total <= 16) scaleResult = 'MENTE MAGRA';
+          if (total >= 17 && total <= 26) scaleResult = 'MENTE GORDINHA';
+          if (total >= 27) scaleResult = 'MENTE GORDA';
+          formData.append('scaleResult', scaleResult);
+
+          console.table('Submitting formData:', ...formData);
+
+          fetch(form.scriptUrl, { method: 'POST', body: formData })
+            .then(response => response.json())
+            .then(data => {
+              form.successMessage = 'Enviado com sucesso!';
+              form.scaleResult = scaleResult;
+              form.answerTotal = total;
+            })
+            .catch(error => {
+              console.error('Error submitting form:', error);
+            })
+            .finally(() => {
+              form.loading = false;
+            });
+        };
+
+        const calculateResult = computed(() => {
+          let total = answerTotalPoints()
+          if (total < 12) {
+            text = 'INVALIDO'
+            level = 0
+          };
+          if (total >= 13 && total <= 16) {
+            text = 'MENTE MAGRA'
+            level = 1
+          };
+          if (total >= 17 && total <= 26) {
+            text = 'MENTE GORDINHA'
+            level = 2
+          };
+          if (total >= 27) {
+            text = 'MENTE GORDA'
+            level = 3
+          };
+
+          return { total, text, level }
+        })
+
+        const answerTotalPoints = () => {
+          let total = Number(0);
+          form.answers.forEach((answer, index) => {
+            if (!isNaN(answer.points)) total += Number(answer.points);
+          });
+          return total;
+        };
+
+        onMounted(() => {
+          form.answers = Array(form.questions.length).fill({});
+          form.warningMessage = 'Preencher todos os campos do formulario!';
+        })
+
+        return {
+          form,
+          submitForm,
+          isDisabled,
+          calculateResult,
+          rules: {
+            minChars: value => value.length >= 3 || 'Mínimo 3 caracteres',
+            isEmail: value => /.+@.+\..+/.test(value) || 'Insira um endereço de email válido',
+            isNumber: value => !isNaN(value) || 'Insira quanto você pesa en Kilos.',
+          }
+        }
+      },
+    })
+      .use(vuetify)
+      .mount('#app');
+  </script>
+</body>
+
+</html>
